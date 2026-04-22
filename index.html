@@ -218,11 +218,21 @@
     setSendBtn(false);
 
     try {
-      const res = await fetch('/api/chat', {
+      const reqBody = JSON.stringify({ message: text, history });
+      let res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history }),
+        body: reqBody,
       });
+      // 첫 번째 요청 실패(콜드 스타트) 시 한 번 자동 재시도
+      if (!res.ok) {
+        await new Promise(r => setTimeout(r, 1500));
+        res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: reqBody,
+        });
+      }
       const data = await res.json();
       removeTyping(typingId);
 
