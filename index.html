@@ -267,13 +267,19 @@
     scrollToBottom();
   }
 
+  function renderMarkdown(text) {
+    return escHtml(text)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+  }
+
   function appendAssistantBubble(text) {
     const chatArea = document.getElementById('chat-area');
     const div = document.createElement('div');
     div.className = 'flex flex-col gap-1 items-start max-w-[85%] msg-enter';
     div.innerHTML = `
       <div class="bg-white px-5 py-4 rounded-3xl bubble-assistant shadow-[0_4px_16px_rgba(255,182,193,0.2)] border border-rose-50">
-        <p class="text-[17px] leading-relaxed text-slate-800 whitespace-pre-wrap">${escHtml(text)}</p>
+        <p class="text-[17px] leading-relaxed text-slate-800">${renderMarkdown(text)}</p>
       </div>
       <span class="text-[11px] text-slate-400 ml-2">${getTimeStr()}</span>
     `;
