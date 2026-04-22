@@ -111,11 +111,11 @@ function callGemini(apiKey, requestBody) {
     };
 
     const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
+      const chunks = [];
+      res.on('data', (chunk) => { chunks.push(chunk); });
       res.on('end', () => {
         try {
-          resolve(JSON.parse(data));
+          resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
         } catch {
           resolve({ error: 'Failed to parse Gemini response' });
         }
