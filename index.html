@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>2027 WYD 인천 교구대회 안내</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#005da7",
+          "on-primary": "#ffffff",
+          "primary-container": "#2976c7",
+          "secondary": "#ab3236",
+          "on-secondary": "#ffffff",
+          "on-surface": "#1b1c1c",
+          "on-surface-variant": "#414751",
+          "surface-container-low": "#f5f3f3",
+          "outline-variant": "#c1c7d3",
+          "background": "#FFF9E5",
+          "surface": "#FFF9E5",
+        },
+        fontFamily: {
+          sans: ["Plus Jakarta Sans", "sans-serif"],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #FFF9E5;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .bubble-assistant { border-bottom-left-radius: 4px !important; }
+  .bubble-user { border-bottom-right-radius: 4px !important; }
+  .chat-scroll::-webkit-scrollbar { width: 4px; }
+  .chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,93,167,0.1);
+    border-radius: 10px;
+  }
+  .typing-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-6px); }
+  }
+  .chip-btn {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid #fecdd3;
+    color: #005da7;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip-btn:hover { background: #fff; }
+  .chip-btn:active { transform: scale(0.95); }
+  .msg-enter {
+    animation: fadeSlideIn 0.25s ease-out;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #input-field::placeholder { color: #94a3b8; }
+  #input-field:focus { outline: none; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 backdrop-blur-md border-b border-rose-100 shadow-sm" style="background: rgba(255,240,245,0.95);">
+  <div class="w-10"></div>
+  <h1 class="text-base font-bold tracking-tight text-blue-600 text-center flex-1 leading-tight">
+    2027 WYD 서울대회<br>
+    <span class="text-sm font-semibold text-rose-400">인천 교구대회 안내</span>
+  </h1>
+  <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-rose-50 transition-colors" onclick="showHelp()">
+    <span class="material-symbols-outlined text-slate-400">help</span>
+  </button>
+</header>
+
+<!-- Chat Area -->
+<main id="chat-area" class="flex-1 mt-16 mb-36 max-w-2xl mx-auto w-full px-5 flex flex-col gap-5 py-5 chat-scroll overflow-y-auto">
+
+  <!-- Date marker -->
+  <div class="flex justify-center mt-2">
+    <span class="bg-white/70 backdrop-blur-sm text-slate-400 text-xs px-3 py-1 rounded-full font-medium shadow-sm" id="date-marker"></span>
+  </div>
+
+  <!-- Welcome message -->
+  <div class="flex flex-col gap-1 items-start max-w-[85%] msg-enter" id="welcome-msg">
+    <div class="flex items-end gap-2">
+      <div class="bg-white p-5 rounded-3xl bubble-assistant shadow-[0_4px_16px_rgba(255,182,193,0.2)] border border-rose-50">
+        <p class="text-[17px] leading-relaxed text-slate-800">
+          안녕하세요! 😊<br>
+          2027년 서울 세계청년대회와<br>
+          인천 교구대회에 대해서<br>
+          무엇이든 물어보세요.<br>
+          제가 다정하게 설명해 드릴게요.
+        </p>
+      </div>
+    </div>
+    <span class="text-[11px] text-slate-400 ml-2" id="welcome-time"></span>
+  </div>
+
+  <!-- Quick reply chips -->
+  <div class="flex flex-wrap gap-2 mt-1" id="chips-area">
+    <button class="chip-btn" onclick="sendChip(this, '인천 교구대회 일정이 어떻게 되나요?')">📅 대회 일정 보기</button>
+    <button class="chip-btn" onclick="sendChip(this, '홈스테이 참가 방법을 알려주세요.')">🏠 홈스테이 안내</button>
+    <button class="chip-btn" onclick="sendChip(this, 'WYD가 무엇인가요?')">🌏 WYD란?</button>
+    <button class="chip-btn" onclick="sendChip(this, '봉사자 신청은 어떻게 하나요?')">🙌 봉사자 신청</button>
+  </div>
+
+</main>
+
+<!-- Bottom Input Area -->
+<div class="fixed bottom-0 left-0 w-full z-50 backdrop-blur-md shadow-[0_-8px_24px_rgba(255,182,193,0.15)]" style="background: rgba(255,240,245,0.97);">
+  <div class="max-w-2xl mx-auto px-4 pt-3 pb-2">
+    <div class="relative flex items-center rounded-full px-2 py-2 border border-rose-100 bg-white shadow-sm">
+      <div class="w-10 h-10 flex items-center justify-center text-slate-300">
+        <span class="material-symbols-outlined" style="font-variation-settings:'opsz' 28;">mic</span>
+      </div>
+      <input
+        id="input-field"
+        class="flex-1 bg-transparent border-none text-slate-800 text-[16px] py-2 px-2 leading-snug"
+        placeholder="무엇이 궁금하신가요?"
+        type="text"
+        autocomplete="off"
+        maxlength="500"
+      >
+      <button
+        id="send-btn"
+        class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-blue-700 transition-all active:scale-90"
+        onclick="sendMessage()"
+      >
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+  <!-- Bottom nav -->
+  <nav class="flex justify-around items-center px-4 pt-1 pb-5">
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+      <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+      <span class="text-[11px] font-semibold mt-0.5">일정</span>
+    </a>
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+      <span class="material-symbols-outlined text-[22px]">church</span>
+      <span class="text-[11px] font-semibold mt-0.5">교구소개</span>
+    </a>
+    <a class="flex flex-col items-center bg-rose-50 text-blue-700 rounded-2xl px-4 py-1.5" href="#">
+      <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1;">chat_bubble</span>
+      <span class="text-[11px] font-bold mt-0.5">대화</span>
+    </a>
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+      <span class="material-symbols-outlined text-[22px]">assignment</span>
+      <span class="text-[11px] font-semibold mt-0.5">신청</span>
+    </a>
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+      <span class="material-symbols-outlined text-[22px]">more_horiz</span>
+      <span class="text-[11px] font-semibold mt-0.5">더보기</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  // --- State ---
+  let history = [];
+  let isLoading = false;
+
+  // --- Init ---
+  const now = new Date();
+  document.getElementById('date-marker').textContent = now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+  document.getElementById('welcome-time').textContent = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+
+  // --- Enter key ---
+  document.getElementById('input-field').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // --- Send from chip ---
+  function sendChip(btn, text) {
+    document.getElementById('chips-area').remove();
+    document.getElementById('input-field').value = text;
+    sendMessage();
+  }
+
+  // --- Main send function ---
+  async function sendMessage() {
+    if (isLoading) return;
+    const input = document.getElementById('input-field');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    appendUserBubble(text);
+    const typingId = appendTyping();
+    isLoading = true;
+    setSendBtn(false);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+      const data = await res.json();
+      removeTyping(typingId);
+
+      const reply = data.reply || '죄송해요, 답변을 가져오지 못했어요.';
+      appendAssistantBubble(reply);
+
+      history.push({ role: 'user', text });
+      history.push({ role: 'model', text: reply });
+      if (history.length > 20) history = history.slice(-20);
+
+    } catch (err) {
+      removeTyping(typingId);
+      appendAssistantBubble('죄송해요, 연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.');
+    }
+
+    isLoading = false;
+    setSendBtn(true);
+  }
+
+  // --- UI helpers ---
+  function getTimeStr() {
+    return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function appendUserBubble(text) {
+    const chatArea = document.getElementById('chat-area');
+    const div = document.createElement('div');
+    div.className = 'flex flex-col gap-1 items-end ml-auto max-w-[80%] msg-enter';
+    div.innerHTML = `
+      <div class="bg-blue-600 text-white px-5 py-4 rounded-3xl bubble-user shadow-md">
+        <p class="text-[16px] leading-relaxed whitespace-pre-wrap">${escHtml(text)}</p>
+      </div>
+      <span class="text-[11px] text-slate-400 mr-2">${getTimeStr()}</span>
+    `;
+    chatArea.appendChild(div);
+    scrollToBottom();
+  }
+
+  function appendAssistantBubble(text) {
+    const chatArea = document.getElementById('chat-area');
+    const div = document.createElement('div');
+    div.className = 'flex flex-col gap-1 items-start max-w-[85%] msg-enter';
+    div.innerHTML = `
+      <div class="bg-white px-5 py-4 rounded-3xl bubble-assistant shadow-[0_4px_16px_rgba(255,182,193,0.2)] border border-rose-50">
+        <p class="text-[17px] leading-relaxed text-slate-800 whitespace-pre-wrap">${escHtml(text)}</p>
+      </div>
+      <span class="text-[11px] text-slate-400 ml-2">${getTimeStr()}</span>
+    `;
+    chatArea.appendChild(div);
+    scrollToBottom();
+  }
+
+  function appendTyping() {
+    const id = 'typing-' + Date.now();
+    const chatArea = document.getElementById('chat-area');
+    const div = document.createElement('div');
+    div.id = id;
+    div.className = 'flex items-end gap-2 max-w-[85%] msg-enter';
+    div.innerHTML = `
+      <div class="bg-white px-5 py-4 rounded-3xl bubble-assistant shadow-[0_4px_16px_rgba(255,182,193,0.2)] border border-rose-50">
+        <div class="flex gap-1.5 items-center h-5">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    `;
+    chatArea.appendChild(div);
+    scrollToBottom();
+    return id;
+  }
+
+  function removeTyping(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  function setSendBtn(enabled) {
+    const btn = document.getElementById('send-btn');
+    btn.disabled = !enabled;
+    btn.style.opacity = enabled ? '1' : '0.5';
+  }
+
+  function scrollToBottom() {
+    const chatArea = document.getElementById('chat-area');
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function escHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function showHelp() {
+    appendAssistantBubble('2027 WYD 인천 교구대회에 관한 질문을 자유롭게 입력해 주세요.\n아래 버튼을 눌러도 되고, 직접 궁금한 것을 타이핑하셔도 돼요. 😊');
+  }
+</script>
+</body>
+</html>
