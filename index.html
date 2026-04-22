@@ -257,7 +257,7 @@
       <span class="text-[11px] text-slate-400 mr-2">${getTimeStr()}</span>
     `;
     chatArea.appendChild(div);
-    scrollToBottom();
+    scrollToEl(div);
   }
 
   function renderMarkdown(text) {
@@ -277,7 +277,7 @@
       <span class="text-[11px] text-slate-400 ml-2">${getTimeStr()}</span>
     `;
     chatArea.appendChild(div);
-    scrollToBottom();
+    scrollToEl(div);
   }
 
   function appendTyping() {
@@ -299,7 +299,7 @@
       </div>
     `;
     chatArea.appendChild(div);
-    scrollToBottom();
+    scrollToEl(div);
     return id;
   }
 
@@ -314,10 +314,32 @@
     btn.style.opacity = enabled ? '1' : '0.5';
   }
 
-  function scrollToBottom() {
+  let lastEl = null;
+
+  function scrollToEl(el) {
     const chatArea = document.getElementById('chat-area');
-    chatArea.scrollBy({ top: 75, behavior: 'smooth' });
+    lastEl = el;
+    // 요소가 DOM에 완전히 렌더링된 후 스크롤
+    requestAnimationFrame(() => {
+      const elTop = el.offsetTop;
+      const elBottom = elTop + el.offsetHeight;
+      const areaVisible = chatArea.scrollTop + chatArea.clientHeight;
+      // 요소가 이미 보이면 스크롤 안 함, 가려져 있으면 보이도록 스크롤
+      if (elBottom > areaVisible - 16) {
+        chatArea.scrollTo({ top: elTop - 16, behavior: 'smooth' });
+      }
+    });
   }
+
+  // 모바일 키보드 닫힐 때 마지막 메시지 위치 복원
+  window.addEventListener('resize', () => {
+    if (lastEl) {
+      const chatArea = document.getElementById('chat-area');
+      requestAnimationFrame(() => {
+        chatArea.scrollTo({ top: lastEl.offsetTop - 16, behavior: 'smooth' });
+      });
+    }
+  });
 
   function escHtml(str) {
     return str
