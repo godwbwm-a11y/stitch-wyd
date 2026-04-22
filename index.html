@@ -126,13 +126,6 @@
     <span class="text-[11px] text-slate-400 ml-2" id="welcome-time"></span>
   </div>
 
-  <!-- Quick reply chips -->
-  <div class="flex flex-wrap gap-2 mt-1" id="chips-area">
-    <button class="chip-btn" onclick="sendChip(this, '인천 교구대회 일정이 어떻게 되나요?')">📅 대회 일정 보기</button>
-    <button class="chip-btn" onclick="sendChip(this, '홈스테이 참가 방법을 알려주세요.')">🏠 홈스테이 안내</button>
-    <button class="chip-btn" onclick="sendChip(this, 'WYD가 무엇인가요?')">🌏 WYD란?</button>
-    <button class="chip-btn" onclick="sendChip(this, '봉사자 신청은 어떻게 하나요?')">🙌 봉사자 신청</button>
-  </div>
 
 </main>
 
@@ -323,7 +316,7 @@
 
   function scrollToBottom() {
     const chatArea = document.getElementById('chat-area');
-    chatArea.scrollTop = chatArea.scrollHeight;
+    chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
   }
 
   function escHtml(str) {
