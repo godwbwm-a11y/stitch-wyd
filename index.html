@@ -95,8 +95,8 @@
 <header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 backdrop-blur-md border-b border-rose-100 shadow-sm" style="background: rgba(255,240,245,0.95);">
   <div class="w-10"></div>
   <h1 class="text-base font-bold tracking-tight text-blue-600 text-center flex-1 leading-tight">
-    2027 WYD 서울대회<br>
-    <span class="text-sm font-semibold text-rose-400">인천 교구대회 안내</span>
+    <span id="header-title">2027 WYD 서울대회</span><br>
+    <span id="header-subtitle" class="text-sm font-semibold text-rose-400">인천 교구대회 안내</span>
   </h1>
   <button id="lang-btn" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-rose-50 transition-colors text-lg" onclick="toggleLangMenu()">🌐</button>
 </header>
@@ -155,23 +155,23 @@
   <nav class="flex justify-around items-center px-4 pt-1 pb-5">
     <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
       <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-      <span class="text-[11px] font-semibold mt-0.5">일정</span>
+      <span id="nav-schedule" class="text-[11px] font-semibold mt-0.5">일정</span>
     </a>
     <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
       <span class="material-symbols-outlined text-[22px]">church</span>
-      <span class="text-[11px] font-semibold mt-0.5">교구소개</span>
+      <span id="nav-diocese" class="text-[11px] font-semibold mt-0.5">교구소개</span>
     </a>
     <a class="flex flex-col items-center bg-rose-50 text-blue-700 rounded-2xl px-4 py-1.5" href="#">
       <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1;">chat_bubble</span>
-      <span class="text-[11px] font-bold mt-0.5">대화</span>
+      <span id="nav-chat" class="text-[11px] font-bold mt-0.5">대화</span>
     </a>
     <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
       <span class="material-symbols-outlined text-[22px]">assignment</span>
-      <span class="text-[11px] font-semibold mt-0.5">신청</span>
+      <span id="nav-register" class="text-[11px] font-semibold mt-0.5">신청</span>
     </a>
     <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
       <span class="material-symbols-outlined text-[22px]">more_horiz</span>
-      <span class="text-[11px] font-semibold mt-0.5">더보기</span>
+      <span id="nav-more" class="text-[11px] font-semibold mt-0.5">더보기</span>
     </a>
   </nav>
 </div>
@@ -196,20 +196,20 @@
   ];
 
   const UI = {
-    ko:    { welcome: '안녕하세요! 😊\n2027년 서울 세계청년대회와\n인천 교구대회에 대해서\n무엇이든 물어보세요.\n제가 다정하게 설명해 드릴게요.', placeholder: '무엇이 궁금하신가요?', loading: '인천교구 WYD 사무국의 문서를 검색하고 있습니다.\n잠시만 기다려주세요.', error: '죄송해요, 연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.' },
-    en:    { welcome: 'Hello! 😊\nFeel free to ask anything about\nthe 2027 Seoul World Youth Day\nand the Incheon Diocese Days.', placeholder: 'What would you like to know?', loading: 'Searching Incheon Diocese WYD Office documents.\nPlease wait...', error: 'Sorry, there was a connection error. Please try again.' },
-    'zh-CN': { welcome: '您好！😊\n欢迎咨询2027年首尔世界青年节\n以及仁川教区大会相关信息。\n请随时提问！', placeholder: '您有什么想了解的？', loading: '正在检索仁川教区WYD事务局文件，\n请稍候...', error: '抱歉，连接出现问题，请稍后再试。' },
-    'zh-HK': { welcome: '你好！😊\n歡迎查詢2027年首爾世界青年節\n及仁川教區大會的資訊。\n請隨時發問！', placeholder: '你想了解什麼？', loading: '正在搜尋仁川教區WYD辦事處文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
-    'zh-TW': { welcome: '您好！😊\n歡迎詢問2027年首爾世界青年節\n及仁川教區大會的相關資訊。\n請隨時提問！', placeholder: '您有什麼想了解的？', loading: '正在搜尋仁川教區WYD辦公室文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
-    ja:    { welcome: 'こんにちは！😊\n2027年ソウル世界青年大会と\n仁川教区大会について\nなんでもご質問ください。', placeholder: '何かご質問はありますか？', loading: '仁川教区WYD事務局の資料を検索中です。\nしばらくお待ちください...', error: '申し訳ありません。接続エラーが発生しました。もう一度お試しください。' },
-    th:    { welcome: 'สวัสดี！😊\nสอบถามเกี่ยวกับงาน\nWorld Youth Day 2027 กรุงโซล\nและ Incheon Diocese Days ได้เลย!', placeholder: 'ต้องการทราบเรื่องอะไร?', loading: 'กำลังค้นหาเอกสารสำนักงาน WYD สังฆมณฑลอินชอน\nกรุณารอสักครู่...', error: 'ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองอีกครั้ง' },
-    vi:    { welcome: 'Xin chào! 😊\nBạn có thể hỏi bất cứ điều gì về\nĐại hội Giới trẻ Thế giới Seoul 2027\nvà Đại hội Giáo phận Incheon!', placeholder: 'Bạn muốn biết điều gì?', loading: 'Đang tìm kiếm tài liệu Văn phòng WYD Giáo phận Incheon.\nVui lòng đợi...', error: 'Xin lỗi, đã xảy ra lỗi kết nối. Vui lòng thử lại.' },
-    my:    { welcome: 'မင်္ဂလာပါ！😊\n၂၀၂၇ ဆိုးလ်ကမ္ဘာ့လူငယ်ဝေမျှပွဲနှင့်\nIncheon Diocese ပွဲတော်အကြောင်း\nမေးမြန်းနိုင်ပါသည်!', placeholder: 'ဘာသိချင်ပါသလဲ?', loading: 'Incheon Diocese WYD ရုံးစာရွက်စာတမ်းများ ရှာဖွေနေသည်။\nကျေးဇူးပြု၍ ခဏစောင့်ပါ...', error: 'တောင်းပန်ပါသည်၊ ချိတ်ဆက်မှုအမှားဖြစ်သည်။ ထပ်မံကြိုးစားပါ။' },
-    pl:    { welcome: 'Witaj! 😊\nZapytaj o cokolwiek dotyczącego\nŚwiatowych Dni Młodzieży Seul 2027\ni Dni Diecezjalnych w Incheon!', placeholder: 'O co chciałbyś zapytać?', loading: 'Przeszukiwanie dokumentów Biura WYD Diecezji Incheon.\nProszę czekać...', error: 'Przepraszamy, wystąpił błąd połączenia. Spróbuj ponownie.' },
-    es:    { welcome: '¡Hola! 😊\nPuedes preguntar lo que quieras sobre\nla Jornada Mundial de la Juventud Seúl 2027\n¡y los Días de la Diócesis de Incheon!', placeholder: '¿Qué quieres saber?', loading: 'Buscando documentos de la Oficina WYD de la Diócesis de Incheon.\nPor favor espera...', error: 'Lo sentimos, hubo un error de conexión. Por favor, inténtalo de nuevo.' },
-    fr:    { welcome: 'Bonjour ! 😊\nPosez-nous toutes vos questions sur\nles JMJ Séoul 2027\net les Jours Diocésains d\'Incheon !', placeholder: 'Que voulez-vous savoir ?', loading: 'Recherche dans les documents du Bureau WYD du Diocèse d\'Incheon.\nVeuillez patienter...', error: 'Désolé, une erreur de connexion s\'est produite. Veuillez réessayer.' },
-    de:    { welcome: 'Hallo! 😊\nFragen Sie alles über den\nWeltjugendtag Seoul 2027\nund die Diözesantage Incheon!', placeholder: 'Was möchten Sie wissen?', loading: 'Suche in den Dokumenten des WYD-Büros der Diözese Incheon.\nBitte warten...', error: 'Es tut uns leid, ein Verbindungsfehler ist aufgetreten. Bitte versuchen Sie es erneut.' },
-    it:    { welcome: 'Ciao! 😊\nChiedi pure tutto sulla\nGiornata Mondiale della Gioventù Seoul 2027\ne sui Giorni Diocesani di Incheon!', placeholder: 'Cosa vuoi sapere?', loading: 'Ricerca nei documenti dell\'Ufficio WYD della Diocesi di Incheon.\nAttendi prego...', error: 'Ci dispiace, si è verificato un errore di connessione. Riprova.' },
+    ko:    { title: '2027 WYD 서울대회', subtitle: '인천 교구대회 안내', nav_schedule: '일정', nav_diocese: '교구소개', nav_chat: '대화', nav_register: '신청', nav_more: '더보기', welcome: '안녕하세요! 😊\n2027년 서울 세계청년대회와\n인천 교구대회에 대해서\n무엇이든 물어보세요.\n제가 다정하게 설명해 드릴게요.', placeholder: '무엇이 궁금하신가요?', loading: '인천교구 WYD 사무국의 문서를 검색하고 있습니다.\n잠시만 기다려주세요.', error: '죄송해요, 연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.' },
+    en:    { title: '2027 WYD Seoul', subtitle: 'Incheon Diocese Days', nav_schedule: 'Schedule', nav_diocese: 'Diocese', nav_chat: 'Chat', nav_register: 'Register', nav_more: 'More', welcome: 'Hello! 😊\nFeel free to ask anything about\nthe 2027 Seoul World Youth Day\nand the Incheon Diocese Days.', placeholder: 'What would you like to know?', loading: 'Searching Incheon Diocese WYD Office documents.\nPlease wait...', error: 'Sorry, there was a connection error. Please try again.' },
+    'zh-CN': { title: '2027 WYD 首尔大会', subtitle: '仁川教区大会指南', nav_schedule: '日程', nav_diocese: '教区介绍', nav_chat: '对话', nav_register: '报名', nav_more: '更多', welcome: '您好！😊\n欢迎咨询2027年首尔世界青年节\n以及仁川教区大会相关信息。\n请随时提问！', placeholder: '您有什么想了解的？', loading: '正在检索仁川教区WYD事务局文件，\n请稍候...', error: '抱歉，连接出现问题，请稍后再试。' },
+    'zh-HK': { title: '2027 WYD 首爾大會', subtitle: '仁川教區大會指南', nav_schedule: '日程', nav_diocese: '教區介紹', nav_chat: '對話', nav_register: '報名', nav_more: '更多', welcome: '你好！😊\n歡迎查詢2027年首爾世界青年節\n及仁川教區大會的資訊。\n請隨時發問！', placeholder: '你想了解什麼？', loading: '正在搜尋仁川教區WYD辦事處文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
+    'zh-TW': { title: '2027 WYD 首爾大會', subtitle: '仁川教區大會指南', nav_schedule: '行程', nav_diocese: '教區介紹', nav_chat: '對話', nav_register: '報名', nav_more: '更多', welcome: '您好！😊\n歡迎詢問2027年首爾世界青年節\n及仁川教區大會的相關資訊。\n請隨時提問！', placeholder: '您有什麼想了解的？', loading: '正在搜尋仁川教區WYD辦公室文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
+    ja:    { title: '2027 WYD ソウル大会', subtitle: '仁川教区大会案内', nav_schedule: '日程', nav_diocese: '教区紹介', nav_chat: '会話', nav_register: '申込', nav_more: 'もっと', welcome: 'こんにちは！😊\n2027年ソウル世界青年大会と\n仁川教区大会について\nなんでもご質問ください。', placeholder: '何かご質問はありますか？', loading: '仁川教区WYD事務局の資料を検索中です。\nしばらくお待ちください...', error: '申し訳ありません。接続エラーが発生しました。もう一度お試しください。' },
+    th:    { title: '2027 WYD โซล', subtitle: 'คู่มือ Incheon Diocese', nav_schedule: 'กำหนดการ', nav_diocese: 'สังฆมณฑล', nav_chat: 'สนทนา', nav_register: 'สมัคร', nav_more: 'เพิ่มเติม', welcome: 'สวัสดี！😊\nสอบถามเกี่ยวกับงาน\nWorld Youth Day 2027 กรุงโซล\nและ Incheon Diocese Days ได้เลย!', placeholder: 'ต้องการทราบเรื่องอะไร?', loading: 'กำลังค้นหาเอกสารสำนักงาน WYD สังฆมณฑลอินชอน\nกรุณารอสักครู่...', error: 'ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองอีกครั้ง' },
+    vi:    { title: '2027 WYD Seoul', subtitle: 'Hướng dẫn Giáo phận Incheon', nav_schedule: 'Lịch trình', nav_diocese: 'Giáo phận', nav_chat: 'Trò chuyện', nav_register: 'Đăng ký', nav_more: 'Thêm', welcome: 'Xin chào! 😊\nBạn có thể hỏi bất cứ điều gì về\nĐại hội Giới trẻ Thế giới Seoul 2027\nvà Đại hội Giáo phận Incheon!', placeholder: 'Bạn muốn biết điều gì?', loading: 'Đang tìm kiếm tài liệu Văn phòng WYD Giáo phận Incheon.\nVui lòng đợi...', error: 'Xin lỗi, đã xảy ra lỗi kết nối. Vui lòng thử lại.' },
+    my:    { title: '2027 WYD ဆိုးလ်', subtitle: 'Incheon Diocese လမ်းညွှန်', nav_schedule: 'အချိန်ဇယား', nav_diocese: 'Diocese', nav_chat: 'စကားပြော', nav_register: 'မှတ်ပုံတင်', nav_more: 'နောက်ထပ်', welcome: 'မင်္ဂလာပါ！😊\n၂၀၂၇ ဆိုးလ်ကမ္ဘာ့လူငယ်ဝေမျှပွဲနှင့်\nIncheon Diocese ပွဲတော်အကြောင်း\nမေးမြန်းနိုင်ပါသည်!', placeholder: 'ဘာသိချင်ပါသလဲ?', loading: 'Incheon Diocese WYD ရုံးစာရွက်စာတမ်းများ ရှာဖွေနေသည်။\nကျေးဇူးပြု၍ ခဏစောင့်ပါ...', error: 'တောင်းပန်ပါသည်၊ ချိတ်ဆက်မှုအမှားဖြစ်သည်။ ထပ်မံကြိုးစားပါ။' },
+    pl:    { title: '2027 WYD Seul', subtitle: 'Przewodnik Diecezji Incheon', nav_schedule: 'Harmonogram', nav_diocese: 'Diecezja', nav_chat: 'Czat', nav_register: 'Rejestracja', nav_more: 'Więcej', welcome: 'Witaj! 😊\nZapytaj o cokolwiek dotyczącego\nŚwiatowych Dni Młodzieży Seul 2027\ni Dni Diecezjalnych w Incheon!', placeholder: 'O co chciałbyś zapytać?', loading: 'Przeszukiwanie dokumentów Biura WYD Diecezji Incheon.\nProszę czekać...', error: 'Przepraszamy, wystąpił błąd połączenia. Spróbuj ponownie.' },
+    es:    { title: '2027 WYD Seúl', subtitle: 'Guía Diócesis de Incheon', nav_schedule: 'Calendario', nav_diocese: 'Diócesis', nav_chat: 'Chat', nav_register: 'Registro', nav_more: 'Más', welcome: '¡Hola! 😊\nPuedes preguntar lo que quieras sobre\nla Jornada Mundial de la Juventud Seúl 2027\n¡y los Días de la Diócesis de Incheon!', placeholder: '¿Qué quieres saber?', loading: 'Buscando documentos de la Oficina WYD de la Diócesis de Incheon.\nPor favor espera...', error: 'Lo sentimos, hubo un error de conexión. Por favor, inténtalo de nuevo.' },
+    fr:    { title: '2027 JMJ Séoul', subtitle: 'Guide Diocèse d\'Incheon', nav_schedule: 'Programme', nav_diocese: 'Diocèse', nav_chat: 'Chat', nav_register: 'Inscription', nav_more: 'Plus', welcome: 'Bonjour ! 😊\nPosez-nous toutes vos questions sur\nles JMJ Séoul 2027\net les Jours Diocésains d\'Incheon !', placeholder: 'Que voulez-vous savoir ?', loading: 'Recherche dans les documents du Bureau WYD du Diocèse d\'Incheon.\nVeuillez patienter...', error: 'Désolé, une erreur de connexion s\'est produite. Veuillez réessayer.' },
+    de:    { title: '2027 WJT Seoul', subtitle: 'Leitfaden Diözese Incheon', nav_schedule: 'Programm', nav_diocese: 'Diözese', nav_chat: 'Chat', nav_register: 'Anmeldung', nav_more: 'Mehr', welcome: 'Hallo! 😊\nFragen Sie alles über den\nWeltjugendtag Seoul 2027\nund die Diözesantage Incheon!', placeholder: 'Was möchten Sie wissen?', loading: 'Suche in den Dokumenten des WYD-Büros der Diözese Incheon.\nBitte warten...', error: 'Es tut uns leid, ein Verbindungsfehler ist aufgetreten. Bitte versuchen Sie es erneut.' },
+    it:    { title: '2027 GMG Seoul', subtitle: 'Guida Diocesi di Incheon', nav_schedule: 'Programma', nav_diocese: 'Diocesi', nav_chat: 'Chat', nav_register: 'Iscrizione', nav_more: 'Altro', welcome: 'Ciao! 😊\nChiedi pure tutto sulla\nGiornata Mondiale della Gioventù Seoul 2027\ne sui Giorni Diocesani di Incheon!', placeholder: 'Cosa vuoi sapere?', loading: 'Ricerca nei documenti dell\'Ufficio WYD della Diocesi di Incheon.\nAttendi prego...', error: 'Ci dispiace, si è verificato un errore di connessione. Riprova.' },
   };
 
   // --- Language detection ---
@@ -237,6 +237,15 @@
   function applyLang(code) {
     currentLang = code;
     const ui = UI[code] || UI['en'];
+    // header
+    document.getElementById('header-title').textContent = ui.title;
+    document.getElementById('header-subtitle').textContent = ui.subtitle;
+    // bottom nav
+    document.getElementById('nav-schedule').textContent = ui.nav_schedule;
+    document.getElementById('nav-diocese').textContent = ui.nav_diocese;
+    document.getElementById('nav-chat').textContent = ui.nav_chat;
+    document.getElementById('nav-register').textContent = ui.nav_register;
+    document.getElementById('nav-more').textContent = ui.nav_more;
     // welcome
     document.getElementById('welcome-text').innerHTML = ui.welcome.replace(/\n/g, '<br>');
     // placeholder
