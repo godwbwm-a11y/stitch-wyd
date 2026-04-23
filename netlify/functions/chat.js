@@ -89,7 +89,8 @@ exports.handler = async (event) => {
   };
 
   const lc = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS['en'];
-  const langPrompt = `\n\n[언어 지시]\n${lc.inst}\n섹션 제목은 반드시 다음을 사용하세요:\n- 1번 섹션: "${lc.h1}"\n- 2번 섹션: "${lc.h2}"\n- 3번 섹션: "${lc.h3}"\n비고 마지막 문장: "${lc.closing}"\n관련 내용이 없을 때: "${lc.na}"`;
+  const langHeader = `[CRITICAL LANGUAGE RULE — MUST FOLLOW BEFORE ANYTHING ELSE]\n${lc.inst}\nYou MUST write every single word of your response in that language. Do NOT use Korean unless the target language is Korean. This rule overrides all other instructions.\n\n`;
+  const langPrompt = `\n\n[언어 지시 — 최우선 규칙 재확인]\n${lc.inst}\n응답의 모든 단어를 위 언어로 작성하세요. 한국어 지식문서를 참고하더라도 출력은 반드시 위 언어로 해야 합니다.\n섹션 제목은 반드시 다음을 사용하세요:\n- 1번 섹션: "${lc.h1}"\n- 2번 섹션: "${lc.h2}"\n- 3번 섹션: "${lc.h3}"\n비고 마지막 문장: "${lc.closing}"\n관련 내용이 없을 때: "${lc.na}"`;
 
   const contents = [
     ...history.map((h) => ({
@@ -100,7 +101,7 @@ exports.handler = async (event) => {
   ];
 
   const requestBody = JSON.stringify({
-    system_instruction: { parts: [{ text: SYSTEM_PROMPT + langPrompt }] },
+    system_instruction: { parts: [{ text: langHeader + SYSTEM_PROMPT + langPrompt }] },
     contents,
     generationConfig: {
       temperature: 0.3,
