@@ -98,10 +98,13 @@
     2027 WYD 서울대회<br>
     <span class="text-sm font-semibold text-rose-400">인천 교구대회 안내</span>
   </h1>
-  <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-rose-50 transition-colors" onclick="showHelp()">
-    <span class="material-symbols-outlined text-slate-400">help</span>
-  </button>
+  <button id="lang-btn" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-rose-50 transition-colors text-lg" onclick="toggleLangMenu()">🌐</button>
 </header>
+
+<!-- Language Menu -->
+<div id="lang-menu" class="hidden fixed top-16 right-0 z-50 w-52 bg-white rounded-2xl shadow-xl border border-rose-100 overflow-hidden">
+  <div id="lang-list"></div>
+</div>
 
 <!-- Chat Area -->
 <main id="chat-area" class="flex-1 mt-16 mb-36 max-w-2xl mx-auto w-full px-5 flex flex-col gap-5 py-5 chat-scroll overflow-y-auto">
@@ -115,13 +118,7 @@
   <div class="flex flex-col gap-1 items-start max-w-[85%] msg-enter" id="welcome-msg">
     <div class="flex items-end gap-2">
       <div class="bg-white p-5 rounded-3xl bubble-assistant shadow-[0_4px_16px_rgba(255,182,193,0.2)] border border-rose-50">
-        <p class="text-[17px] leading-relaxed text-slate-800">
-          안녕하세요! 😊<br>
-          2027년 서울 세계청년대회와<br>
-          인천 교구대회에 대해서<br>
-          무엇이든 물어보세요.<br>
-          제가 다정하게 설명해 드릴게요.
-        </p>
+        <p id="welcome-text" class="text-[17px] leading-relaxed text-slate-800"></p>
       </div>
     </div>
     <span class="text-[11px] text-slate-400 ml-2" id="welcome-time"></span>
@@ -180,14 +177,107 @@
 </div>
 
 <script>
+  // --- Language config ---
+  const LANGS = [
+    { code: 'ko',    flag: '🇰🇷', name: '한국어' },
+    { code: 'en',    flag: '🇺🇸', name: 'English' },
+    { code: 'zh-CN', flag: '🇨🇳', name: '普通话' },
+    { code: 'zh-HK', flag: '🇭🇰', name: '廣東話' },
+    { code: 'zh-TW', flag: '🇹🇼', name: '台灣華語' },
+    { code: 'ja',    flag: '🇯🇵', name: '日本語' },
+    { code: 'th',    flag: '🇹🇭', name: 'ภาษาไทย' },
+    { code: 'vi',    flag: '🇻🇳', name: 'Tiếng Việt' },
+    { code: 'my',    flag: '🇲🇲', name: 'မြန်မာ' },
+    { code: 'pl',    flag: '🇵🇱', name: 'Polski' },
+    { code: 'es',    flag: '🇪🇸', name: 'Español' },
+    { code: 'fr',    flag: '🇫🇷', name: 'Français' },
+    { code: 'de',    flag: '🇩🇪', name: 'Deutsch' },
+    { code: 'it',    flag: '🇮🇹', name: 'Italiano' },
+  ];
+
+  const UI = {
+    ko:    { welcome: '안녕하세요! 😊\n2027년 서울 세계청년대회와\n인천 교구대회에 대해서\n무엇이든 물어보세요.\n제가 다정하게 설명해 드릴게요.', placeholder: '무엇이 궁금하신가요?', loading: '인천교구 WYD 사무국의 문서를 검색하고 있습니다.\n잠시만 기다려주세요.', error: '죄송해요, 연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.' },
+    en:    { welcome: 'Hello! 😊\nFeel free to ask anything about\nthe 2027 Seoul World Youth Day\nand the Incheon Diocese Days.', placeholder: 'What would you like to know?', loading: 'Searching Incheon Diocese WYD Office documents.\nPlease wait...', error: 'Sorry, there was a connection error. Please try again.' },
+    'zh-CN': { welcome: '您好！😊\n欢迎咨询2027年首尔世界青年节\n以及仁川教区大会相关信息。\n请随时提问！', placeholder: '您有什么想了解的？', loading: '正在检索仁川教区WYD事务局文件，\n请稍候...', error: '抱歉，连接出现问题，请稍后再试。' },
+    'zh-HK': { welcome: '你好！😊\n歡迎查詢2027年首爾世界青年節\n及仁川教區大會的資訊。\n請隨時發問！', placeholder: '你想了解什麼？', loading: '正在搜尋仁川教區WYD辦事處文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
+    'zh-TW': { welcome: '您好！😊\n歡迎詢問2027年首爾世界青年節\n及仁川教區大會的相關資訊。\n請隨時提問！', placeholder: '您有什麼想了解的？', loading: '正在搜尋仁川教區WYD辦公室文件，\n請稍候...', error: '抱歉，連線出現問題，請稍後再試。' },
+    ja:    { welcome: 'こんにちは！😊\n2027年ソウル世界青年大会と\n仁川教区大会について\nなんでもご質問ください。', placeholder: '何かご質問はありますか？', loading: '仁川教区WYD事務局の資料を検索中です。\nしばらくお待ちください...', error: '申し訳ありません。接続エラーが発生しました。もう一度お試しください。' },
+    th:    { welcome: 'สวัสดี！😊\nสอบถามเกี่ยวกับงาน\nWorld Youth Day 2027 กรุงโซล\nและ Incheon Diocese Days ได้เลย!', placeholder: 'ต้องการทราบเรื่องอะไร?', loading: 'กำลังค้นหาเอกสารสำนักงาน WYD สังฆมณฑลอินชอน\nกรุณารอสักครู่...', error: 'ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองอีกครั้ง' },
+    vi:    { welcome: 'Xin chào! 😊\nBạn có thể hỏi bất cứ điều gì về\nĐại hội Giới trẻ Thế giới Seoul 2027\nvà Đại hội Giáo phận Incheon!', placeholder: 'Bạn muốn biết điều gì?', loading: 'Đang tìm kiếm tài liệu Văn phòng WYD Giáo phận Incheon.\nVui lòng đợi...', error: 'Xin lỗi, đã xảy ra lỗi kết nối. Vui lòng thử lại.' },
+    my:    { welcome: 'မင်္ဂလာပါ！😊\n၂၀၂၇ ဆိုးလ်ကမ္ဘာ့လူငယ်ဝေမျှပွဲနှင့်\nIncheon Diocese ပွဲတော်အကြောင်း\nမေးမြန်းနိုင်ပါသည်!', placeholder: 'ဘာသိချင်ပါသလဲ?', loading: 'Incheon Diocese WYD ရုံးစာရွက်စာတမ်းများ ရှာဖွေနေသည်။\nကျေးဇူးပြု၍ ခဏစောင့်ပါ...', error: 'တောင်းပန်ပါသည်၊ ချိတ်ဆက်မှုအမှားဖြစ်သည်။ ထပ်မံကြိုးစားပါ။' },
+    pl:    { welcome: 'Witaj! 😊\nZapytaj o cokolwiek dotyczącego\nŚwiatowych Dni Młodzieży Seul 2027\ni Dni Diecezjalnych w Incheon!', placeholder: 'O co chciałbyś zapytać?', loading: 'Przeszukiwanie dokumentów Biura WYD Diecezji Incheon.\nProszę czekać...', error: 'Przepraszamy, wystąpił błąd połączenia. Spróbuj ponownie.' },
+    es:    { welcome: '¡Hola! 😊\nPuedes preguntar lo que quieras sobre\nla Jornada Mundial de la Juventud Seúl 2027\n¡y los Días de la Diócesis de Incheon!', placeholder: '¿Qué quieres saber?', loading: 'Buscando documentos de la Oficina WYD de la Diócesis de Incheon.\nPor favor espera...', error: 'Lo sentimos, hubo un error de conexión. Por favor, inténtalo de nuevo.' },
+    fr:    { welcome: 'Bonjour ! 😊\nPosez-nous toutes vos questions sur\nles JMJ Séoul 2027\net les Jours Diocésains d\'Incheon !', placeholder: 'Que voulez-vous savoir ?', loading: 'Recherche dans les documents du Bureau WYD du Diocèse d\'Incheon.\nVeuillez patienter...', error: 'Désolé, une erreur de connexion s\'est produite. Veuillez réessayer.' },
+    de:    { welcome: 'Hallo! 😊\nFragen Sie alles über den\nWeltjugendtag Seoul 2027\nund die Diözesantage Incheon!', placeholder: 'Was möchten Sie wissen?', loading: 'Suche in den Dokumenten des WYD-Büros der Diözese Incheon.\nBitte warten...', error: 'Es tut uns leid, ein Verbindungsfehler ist aufgetreten. Bitte versuchen Sie es erneut.' },
+    it:    { welcome: 'Ciao! 😊\nChiedi pure tutto sulla\nGiornata Mondiale della Gioventù Seoul 2027\ne sui Giorni Diocesani di Incheon!', placeholder: 'Cosa vuoi sapere?', loading: 'Ricerca nei documenti dell\'Ufficio WYD della Diocesi di Incheon.\nAttendi prego...', error: 'Ci dispiace, si è verificato un errore di connessione. Riprova.' },
+  };
+
+  // --- Language detection ---
+  function detectLang() {
+    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    if (nav.startsWith('ko')) return 'ko';
+    if (nav.startsWith('zh-hk') || nav.startsWith('zh-yue')) return 'zh-HK';
+    if (nav.startsWith('zh-tw')) return 'zh-TW';
+    if (nav.startsWith('zh')) return 'zh-CN';
+    if (nav.startsWith('ja')) return 'ja';
+    if (nav.startsWith('th')) return 'th';
+    if (nav.startsWith('vi')) return 'vi';
+    if (nav.startsWith('my')) return 'my';
+    if (nav.startsWith('pl')) return 'pl';
+    if (nav.startsWith('es')) return 'es';
+    if (nav.startsWith('fr')) return 'fr';
+    if (nav.startsWith('de')) return 'de';
+    if (nav.startsWith('it')) return 'it';
+    if (nav.startsWith('en')) return 'en';
+    return 'en';
+  }
+
+  let currentLang = detectLang();
+
+  function applyLang(code) {
+    currentLang = code;
+    const ui = UI[code] || UI['en'];
+    // welcome
+    document.getElementById('welcome-text').innerHTML = ui.welcome.replace(/\n/g, '<br>');
+    // placeholder
+    document.getElementById('input-field').placeholder = ui.placeholder;
+    // lang button label
+    const lang = LANGS.find(l => l.code === code);
+    document.getElementById('lang-btn').textContent = lang ? lang.flag : '🌐';
+    // rebuild lang list
+    const list = document.getElementById('lang-list');
+    list.innerHTML = LANGS.map(l => `
+      <button onclick="selectLang('${l.code}')"
+        class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-rose-50 transition-colors text-[15px] ${l.code === code ? 'font-bold text-blue-600 bg-rose-50' : 'text-slate-700'}">
+        <span>${l.flag}</span><span>${l.name}</span>
+      </button>`).join('');
+  }
+
+  function toggleLangMenu() {
+    const menu = document.getElementById('lang-menu');
+    menu.classList.toggle('hidden');
+  }
+
+  function selectLang(code) {
+    applyLang(code);
+    document.getElementById('lang-menu').classList.add('hidden');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#lang-btn') && !e.target.closest('#lang-menu')) {
+      document.getElementById('lang-menu').classList.add('hidden');
+    }
+  });
+
   // --- State ---
   let history = [];
   let isLoading = false;
 
   // --- Init ---
   const now = new Date();
-  document.getElementById('date-marker').textContent = now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
-  document.getElementById('welcome-time').textContent = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('date-marker').textContent = now.toLocaleDateString(currentLang === 'ko' ? 'ko-KR' : 'en-US', { month: 'long', day: 'numeric', weekday: 'short' });
+  document.getElementById('welcome-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  applyLang(currentLang);
 
   // --- Enter key ---
   document.getElementById('input-field').addEventListener('keydown', (e) => {
@@ -218,7 +308,7 @@
     setSendBtn(false);
 
     try {
-      const reqBody = JSON.stringify({ message: text, history });
+      const reqBody = JSON.stringify({ message: text, history, lang: currentLang });
       let res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -245,7 +335,7 @@
 
     } catch (err) {
       removeTyping(typingId);
-      appendAssistantBubble('죄송해요, 연결에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.');
+      appendAssistantBubble((UI[currentLang]||UI['en']).error);
     }
 
     isLoading = false;
@@ -305,7 +395,7 @@
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
           </div>
-          <p class="text-[14px] text-slate-400 leading-snug">인천교구 WYD 사무국의 문서를 검색하고 있습니다. 잠시만 기다려주세요.</p>
+          <p class="text-[14px] text-slate-400 leading-snug">${(UI[currentLang]||UI['en']).loading.replace(/\n/g,'<br>')}</p>
         </div>
       </div>
     `;
@@ -348,9 +438,6 @@
       .replace(/"/g, '&quot;');
   }
 
-  function showHelp() {
-    appendAssistantBubble('2027 WYD 인천 교구대회에 관한 질문을 자유롭게 입력해 주세요.\n아래 버튼을 눌러도 되고, 직접 궁금한 것을 타이핑하셔도 돼요. 😊');
-  }
 </script>
 </body>
 </html>
