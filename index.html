@@ -287,6 +287,7 @@
   document.getElementById('date-marker').textContent = now.toLocaleDateString(currentLang === 'ko' ? 'ko-KR' : 'en-US', { month: 'long', day: 'numeric', weekday: 'short' });
   document.getElementById('welcome-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   applyLang(currentLang);
+  document.getElementById('input-field').focus();
 
   // --- Enter key ---
   document.getElementById('input-field').addEventListener('keydown', (e) => {
