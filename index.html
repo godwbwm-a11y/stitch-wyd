@@ -107,7 +107,7 @@
 </div>
 
 <!-- Chat Area -->
-<main id="chat-area" class="flex-1 mt-16 mb-36 max-w-2xl mx-auto w-full px-5 flex flex-col gap-5 py-5 chat-scroll overflow-y-auto">
+<main id="chat-area" class="flex-1 mt-16 mb-36 max-w-2xl mx-auto w-full px-5 flex flex-col gap-5 py-5 chat-scroll overflow-y-auto" onclick="document.getElementById('input-field').focus()">
 
   <!-- Date marker -->
   <div class="flex justify-center mt-2">
@@ -141,6 +141,7 @@
         type="text"
         autocomplete="off"
         maxlength="500"
+        autofocus
       >
       <button
         id="send-btn"
