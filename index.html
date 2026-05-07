@@ -383,8 +383,16 @@
 
   function renderMarkdown(text) {
     return escHtml(text)
-      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-rose-500">$1</strong>')
-      .replace(/\n/g, '<br>');
+      .split('\n')
+      .map(line => {
+        // 줄 전체가 **제목** → 파란색 볼드 (섹션 헤더)
+        if (/^\*\*[^*]+\*\*$/.test(line.trim())) {
+          return line.replace(/\*\*([^*]+)\*\*/, '<strong class="text-blue-600">$1</strong>');
+        }
+        // 인라인 볼드 → 붉은색 볼드
+        return line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-rose-500">$1</strong>');
+      })
+      .join('<br>');
   }
 
   function appendAssistantBubble(text) {
