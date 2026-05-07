@@ -298,6 +298,18 @@
     }
   });
 
+  // --- Google Form logging ---
+  function logToGoogleForm(text) {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '-').replace('.', '');
+    const timeStr = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+    const entry = `[${dateStr} ${timeStr}] ${text}`;
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdTde7xnCtdP7mqBgPQPsPLXDREsZ9RP-m2wRmrr13jEIou8Q/formResponse';
+    const body = new FormData();
+    body.append('entry.2054839560', entry);
+    fetch(formUrl, { method: 'POST', mode: 'no-cors', body }).catch(() => {});
+  }
+
   // --- Send from chip ---
   function sendChip(btn, text) {
     document.getElementById('chips-area').remove();
@@ -313,6 +325,7 @@
     if (!text) return;
 
     input.value = '';
+    logToGoogleForm(text);
     appendUserBubble(text);
     const typingId = appendTyping();
     isLoading = true;
