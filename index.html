@@ -387,7 +387,7 @@
 
   function renderMarkdown(text) {
     return escHtml(text)
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong class="text-blue-600">$1</strong>')
       .replace(/\n/g, '<br>');
   }
 
