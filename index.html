@@ -154,11 +154,11 @@
   </div>
   <!-- Bottom nav -->
   <nav class="flex justify-around items-center px-4 pt-1 pb-5">
-    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#" onclick="showSchedule();return false;">
       <span class="material-symbols-outlined text-[22px]">calendar_month</span>
       <span id="nav-schedule" class="text-[11px] font-semibold mt-0.5">일정</span>
     </a>
-    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#" onclick="showDiocese();return false;">
       <span class="material-symbols-outlined text-[22px]">church</span>
       <span id="nav-diocese" class="text-[11px] font-semibold mt-0.5">교구소개</span>
     </a>
@@ -304,6 +304,122 @@
     const body = new URLSearchParams();
     body.append('entry.804139256', text);
     fetch(formUrl, { method: 'POST', mode: 'no-cors', body }).catch(() => {});
+  }
+
+  // --- Show schedule (일정) ---
+  function showSchedule() {
+    const text = `📅 **2027 WYD 풀-스케줄 미리보기** ✨
+
+여기까지 오느라 진짜 수고했어요 🙌
+2027 서울 WYD까지 가는 길, 한눈에 정리해드릴게요!
+
+**1️⃣ 2026 Pre-DID (사전 교구대회)**
+📆 2026년 (구체 일정 추후 공지)
+📍 인천교구 일원
+
+💡 이게 뭐냐면요...
+본격적인 대회 전에 "예열"하는 시간이에요 🔥
+• 봉사자 "e음이(EUM-I)" 모집 & 양성 시작
+• 본당별 신앙 프로그램 워밍업
+• 성 카를로 아쿠티스 유해 본당 순례 ✝️
+• 청년 친교 & 영성 모임
+
+이거 안 챙기면 진짜 후회각... 😭
+
+**2️⃣ 2027 인천 교구대회 (DID)**
+📆 2027년 7월 말 ~ 본대회 직전 (5박 6일)
+📍 인천교구 전역
+
+💡 이게 진짜 메인 디저트 🍰
+• 전 세계 청년들 인천에 다 모임!
+• 홈스테이로 찐 한국 가정 라이프 체험 🏠
+• 본당별 친교 프로그램
+• 콘셉트 **"잇다 [IT-DA]"** — 사람·문화·시간을 연결
+• 인천 곳곳 신앙+관광 코스
+• 참가비 약 100달러/유로 (홈스테이·조식·교통카드·유심·기념품 포함)
+
+진짜 인생 한 번뿐인 경험 보장 💯
+
+**3️⃣ 2027 서울 WYD 본대회**
+📆 2027년 8월 (서울 메인 일정)
+📍 서울 (메인 행사장)
+
+💡 교황님 + 전 세계 청년들의 대축제 🎉
+• 개막 미사 → 환영식 → 십자가의 길
+• 교황님 환영식 ✨
+• 철야 기도 🌙
+• 파견 미사로 대단원의 마무리
+
+세계 곳곳에서 온 친구들이랑 한 번에 모이는 순간, 진짜 잊을 수 없어요 🌍
+
+📩 자세한 일정은 사무국으로:
+qna.wyd.doc.icn@gmail.com
+📱 인스타: @incheon_2027_wyd 😊`;
+    appendAssistantBubble(text);
+  }
+
+  // --- Show diocese intro (교구소개) ---
+  function showDiocese() {
+    const text = `🏛️ **인천교구, 우리 이렇게 살아왔어요** ✨
+
+**📍 인천교구가 뭐냐면…**
+한국 천주교에서 **세 번째로 큰 교구** 🥉
+1961년 메리놀 외방전교회 신부님들이 시작했고,
+지금은 청년들이 가장 활발하게 움직이는 교구 중 하나예요 🔥
+
+**⛪ 우리의 뿌리, 짧게 요약**
+• 1791년 — 한국 첫 순교자 탄생 (윤지충·권상연)
+• 1839/1846년 — 박해 시대, 수많은 순교자 배출
+• 1845년 — 한국 첫 사제 **김대건 안드레아** 신부
+• 1961년 — 메리놀회 헌신으로 인천교구 정식 설립
+• 2027년 — **WYD 인천 교구대회 개최** 🎯
+
+순교의 피로 다져진 거룩한 땅, 그게 인천이에요 🙏
+
+**🌍 인천교구만의 시그니처**
+
+✈️ **관문 인천**
+인천국제공항이 있어서 외국 친구들이 한국 들어올 때 제일 먼저 만나는 교구!
+
+🌊 **바다 × 다양성**
+인천항을 통해 들어온 다양한 문화 & 사람들이 어우러진 동네예요. 이주민, 다문화 친구들과 함께 사는 "열린 공동체"
+
+💎 **순교 영성 DNA**
+신앙 선조들이 압송되어 가던 길에 인천이 있었어요. 그 영성이 지금도 살아있어요.
+
+🤝 **친교 중심 공동체**
+사제·수도자·평신도 다 같이 "벽돌"이 되어 주님의 집을 짓고 있어요
+
+━━━━━━━━━━━━
+
+**💌 청년들에게 보내는 진심 한 통**
+
+안녕, 청년 친구들 💜
+
+여러분이 누구든, 어디서 왔든, 무슨 생각을 하든
+인천교구는 **있는 그대로의 너**를 환영해요 🫶
+
+✅ 신앙이 흔들려도 OK
+✅ 처음 와봐도 OK
+✅ 멀리서 와도 OK
+✅ 한국말 잘 못해도 OK
+✅ 그냥 궁금해서 와도 OK
+
+너는 하느님이 만드신 **단 하나뿐인 "원본"** 이야.
+복사본처럼 살지 말고, 너만의 색깔로 빛나자 🌈
+
+성 카를로 아쿠티스가 그랬듯,
+일상 속에서도, 디지털 세상에서도 성덕은 가능해요 💻✨
+
+> "성체는 하늘로 가는 나의 고속도로." — 성 카를로 아쿠티스
+
+2027년, **인천에서 만나요** 🇰🇷
+우리는 너를 진심으로 기다리고 있어요 💙
+
+📩 궁금한 거 있으면 언제든지:
+qna.wyd.doc.icn@gmail.com
+📱 인스타: @incheon_2027_wyd 😊`;
+    appendAssistantBubble(text);
   }
 
   // --- Send from chip ---
