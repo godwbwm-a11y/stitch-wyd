@@ -306,6 +306,36 @@
     fetch(formUrl, { method: 'POST', mode: 'no-cors', body }).catch(() => {});
   }
 
+  // --- 번역 캐시 & 헬퍼 ---
+  const navTranslationCache = {};
+  async function translateAndShow(cacheKey, koreanText) {
+    if (currentLang === 'ko') {
+      appendAssistantBubble(koreanText);
+      return;
+    }
+    const key = `${cacheKey}_${currentLang}`;
+    if (navTranslationCache[key]) {
+      appendAssistantBubble(navTranslationCache[key]);
+      return;
+    }
+    const typingId = appendTyping();
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: koreanText, lang: currentLang, mode: 'translate' }),
+      });
+      const data = await res.json();
+      const translated = data.reply || koreanText;
+      navTranslationCache[key] = translated;
+      removeTyping(typingId);
+      appendAssistantBubble(translated);
+    } catch (e) {
+      removeTyping(typingId);
+      appendAssistantBubble(koreanText);
+    }
+  }
+
   // --- Show schedule (일정) ---
   function showSchedule() {
     const text = `📅 **2027 WYD 풀-스케줄 미리보기** ✨
@@ -372,7 +402,7 @@
 📩 자세한 일정은 사무국으로:
 qna.wyd.doc.icn@gmail.com
 📱 인스타: @incheon_2027_wyd 😊`;
-    appendAssistantBubble(text);
+    translateAndShow('schedule', text);
   }
 
   // --- Show diocese intro (교구소개) ---
@@ -436,7 +466,7 @@ qna.wyd.doc.icn@gmail.com
 📩 궁금한 거 있으면 언제든지:
 qna.wyd.doc.icn@gmail.com
 📱 인스타: @incheon_2027_wyd 😊`;
-    appendAssistantBubble(text);
+    translateAndShow('diocese', text);
   }
 
   // --- Show registration info (신청) ---
@@ -506,7 +536,7 @@ https://forms.gle/4uEior7QWmNL8cTz5
 
 우리는 너의 신청을 기다리고 있어 💙
 2027년, 인천에서 만나자 🫶`;
-    appendAssistantBubble(text);
+    translateAndShow('register', text);
   }
 
   // --- Send from chip ---

@@ -66,9 +66,35 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { message, history = [], lang = 'ko' } = body;
+  const { message, history = [], lang = 'ko', mode = 'chat' } = body;
   if (!message) {
     return { statusCode: 400, body: JSON.stringify({ error: 'No message provided' }) };
+  }
+
+  // 번역 모드: 한국어 원문을 선택된 언어로 그대로 번역
+  if (mode === 'translate') {
+    const langNames = {
+      en: 'English', 'zh-CN': 'Simplified Chinese (Mandarin)', 'zh-HK': 'Traditional Chinese (Cantonese)',
+      'zh-TW': 'Traditional Chinese (Taiwan Mandarin)', ja: 'Japanese', th: 'Thai', vi: 'Vietnamese',
+      my: 'Burmese (Myanmar)', pl: 'Polish', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian',
+    };
+    const targetLang = langNames[lang] || 'English';
+    const translatePrompt = `You are a professional translator for a Catholic youth event app aimed at Gen-Z and Gen-Alpha (MZ generation tone).\nTranslate the following Korean text into ${targetLang}.\n\nSTRICT RULES:\n- Preserve EVERY emoji exactly as-is and in the same positions.\n- Preserve markdown formatting (**bold**, line breaks, bullet points "•", separator lines like "━━━").\n- Preserve ALL URLs (https://...), email addresses, and Instagram handles (@username) EXACTLY without translating.\n- Preserve all dates, times, prices, and numbers exactly.\n- Match the casual, friendly, youthful tone (MZ/Gen-Z vibe) of the original.\n- Output ONLY the translated text. No preamble, no explanation, no quotation marks around the result.`;
+    const tRequestBody = JSON.stringify({
+      system_instruction: { parts: [{ text: translatePrompt }] },
+      contents: [{ role: 'user', parts: [{ text: message }] }],
+      generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
+    });
+    const tRes = await callGemini(apiKey, tRequestBody);
+    if (tRes.error) {
+      return { statusCode: 500, body: JSON.stringify({ error: tRes.error }) };
+    }
+    const tText = tRes?.candidates?.[0]?.content?.parts?.[0]?.text || message;
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reply: tText }),
+    };
   }
 
   const LANG_INSTRUCTIONS = {

@@ -13,7 +13,11 @@
       "mcp__Claude_in_Chrome__computer",
       "mcp__Claude_in_Chrome__read_network_requests",
       "mcp__Claude_in_Chrome__javascript_tool",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "WebFetch(domain:docs.google.com)",
+      "Bash(curl -s \"https://docs.google.com/forms/d/e/1FAIpQLSdTde7xnCtdP7mqBgPQPsPLXDREsZ9RP-m2wRmrr13jEIou8Q/viewform\")",
+      "Bash(git commit *)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST https://docs.google.com/forms/d/e/1FAIpQLSdTde7xnCtdP7mqBgPQPsPLXDREsZ9RP-m2wRmrr13jEIou8Q/formResponse --data-urlencode entry.2054839560=테스트질문_2054839560 -L)"
     ]
   }
 }
