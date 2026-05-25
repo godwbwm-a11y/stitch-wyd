@@ -166,7 +166,7 @@
       <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1;">chat_bubble</span>
       <span id="nav-chat" class="text-[11px] font-bold mt-0.5">대화</span>
     </a>
-    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#">
+    <a class="flex flex-col items-center text-slate-400 px-3 py-1 hover:text-rose-400 transition-all active:scale-90" href="#" onclick="showRegister();return false;">
       <span class="material-symbols-outlined text-[22px]">assignment</span>
       <span id="nav-register" class="text-[11px] font-semibold mt-0.5">신청</span>
     </a>
@@ -433,6 +433,69 @@ qna.wyd.doc.icn@gmail.com
     appendAssistantBubble(text);
   }
 
+  // --- Show registration info (신청) ---
+  function showRegister() {
+    const text = `📝 **WYD 인천 교구대회 신청 안내** ✨
+
+어떻게 신청하는지 한눈에 정리해드릴게요!
+링크는 그냥 탭/클릭만 하면 바로 이동돼요 👆
+
+**1️⃣ 2026 Pre-DID (사전 교구대회) 신청**
+
+💡 누가 신청해요?
+• 봉사자로 함께하고 싶은 청년·성인
+• 본당 단위로 카를로 아쿠티스 유해 순례 참여
+• 영성 프로그램·청년 모임 참여 희망자
+
+🗓️ 신청 시기:
+• 2026년 5월~6월 — 조직위 봉사자 (e음이/EUM-I) 1차
+• 2026년 6월~12월 — 전문 봉사자 (미디어·통번역·의료 등)
+• 2026년 9월~ — 일반 운영 봉사자 + 영적 지지 봉사자
+
+📍 신청 방법:
+• 🔗 공식 안내: https://wyd2027did.org/en/apply
+• 📧 이메일 문의: qna.wyd.doc.icn@gmail.com
+• 📱 인스타 DM: @incheon_2027_wyd
+• ⛪ 본당 사무실 통한 단체 신청도 OK
+
+**2️⃣ 2027 인천 교구대회 (DID) 신청**
+
+💡 누가 신청해요?
+• 전 세계 청년 (만 19세 이상 권장)
+• 미성년자는 보호자 동반 필수 🙏
+
+🗓️ 등록 시작:
+• **2026년 6월 1일** 부터 오픈! 🎯
+
+🎟️ 참가비:
+• 1인당 약 **100달러(USD) 또는 100유로(EUR)**
+• 포함: 홈스테이·조식·교통카드·한국 유심(USIM/eSIM)·기념품 키트
+
+📍 신청 방법:
+• 🔗 공식 등록: https://wyd2027did.org/en/apply
+• 📋 그룹 단위 등록이 원칙 (최소 2인부터)
+• 1인 참가 희망자는 소속 국가 WYD 사무국 통한 통합 그룹(Cluster) 합류 가능
+
+📝 필수 제출:
+✅ 파견 측 공식 추천서/증명서
+✅ 그룹 리더 신원 정보
+✅ 참가자 명단 (미성년자·사제·장애인 구분)
+✅ 여행자보험 증빙
+✅ 출입국 일정
+
+━━━━━━━━━━━━
+
+💬 **도움이 필요하면 언제든지!**
+
+📧 사무국 이메일: qna.wyd.doc.icn@gmail.com
+🌐 공식 홈페이지: https://wyd2027did.org/en/apply
+📱 인스타그램: @incheon_2027_wyd
+
+우리는 너의 신청을 기다리고 있어 💙
+2027년, 인천에서 만나자 🫶`;
+    appendAssistantBubble(text);
+  }
+
   // --- Send from chip ---
   function sendChip(btn, text) {
     document.getElementById('chips-area').remove();
@@ -514,10 +577,16 @@ qna.wyd.doc.icn@gmail.com
       .map(line => {
         // 줄 전체가 **제목** → 파란색 볼드 (섹션 헤더)
         if (/^\*\*[^*]+\*\*$/.test(line.trim())) {
-          return line.replace(/\*\*([^*]+)\*\*/, '<strong class="text-blue-600">$1</strong>');
+          line = line.replace(/\*\*([^*]+)\*\*/, '<strong class="text-blue-600">$1</strong>');
+        } else {
+          // 인라인 볼드 → 붉은색 볼드
+          line = line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-rose-500">$1</strong>');
         }
-        // 인라인 볼드 → 붉은색 볼드
-        return line.replace(/\*\*(.+?)\*\*/g, '<strong class="text-rose-500">$1</strong>');
+        // URL 자동 링크 (http/https)
+        line = line.replace(/(https?:\/\/[^\s<)\]]+)/g, '<a href="$1" target="_blank" rel="noopener" class="text-blue-600 underline break-all">$1</a>');
+        // 이메일 자동 링크
+        line = line.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '<a href="mailto:$1" class="text-blue-600 underline break-all">$1</a>');
+        return line;
       })
       .join('<br>');
   }
