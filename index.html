@@ -657,15 +657,24 @@ https://forms.gle/4uEior7QWmNL8cTz5
   function scrollToEl(el) {
     const chatArea = document.getElementById('chat-area');
     requestAnimationFrame(() => {
-      chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+      // 새 메시지의 "맨 위"가 화면 상단에 오도록 스크롤
+      const elRect = el.getBoundingClientRect();
+      const areaRect = chatArea.getBoundingClientRect();
+      const target = chatArea.scrollTop + elRect.top - areaRect.top - 12;
+      chatArea.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
     });
   }
 
-  // 모바일 키보드 닫힐 때 맨 아래로 복원
+  // 모바일 키보드 닫힐 때 마지막 메시지 위쪽으로 복원
   window.addEventListener('resize', () => {
     const chatArea = document.getElementById('chat-area');
+    const lastMsg = chatArea.querySelector('.msg-enter:last-child');
+    if (!lastMsg) return;
     requestAnimationFrame(() => {
-      chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+      const elRect = lastMsg.getBoundingClientRect();
+      const areaRect = chatArea.getBoundingClientRect();
+      const target = chatArea.scrollTop + elRect.top - areaRect.top - 12;
+      chatArea.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
     });
   });
 
