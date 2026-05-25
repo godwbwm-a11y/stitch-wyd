@@ -597,8 +597,10 @@ https://forms.gle/4uEior7QWmNL8cTz5
         }
         // URL 자동 링크 (http/https)
         line = line.replace(/(https?:\/\/[^\s<)\]]+)/g, '<a href="$1" target="_blank" rel="noopener" class="text-blue-600 underline break-all">$1</a>');
-        // 이메일 자동 링크
+        // 이메일 자동 링크 (Instagram 핸들 처리 전에 먼저)
         line = line.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '<a href="mailto:$1" class="text-blue-600 underline break-all">$1</a>');
+        // Instagram 핸들 (@username) 자동 링크 — 이메일이 아닌 경우만
+        line = line.replace(/(^|[^\w@:>])@([a-zA-Z][a-zA-Z0-9._]{1,29})\b/g, '$1<a href="https://instagram.com/$2" target="_blank" rel="noopener" class="text-blue-600 underline">@$2</a>');
         return line;
       })
       .join('<br>');
